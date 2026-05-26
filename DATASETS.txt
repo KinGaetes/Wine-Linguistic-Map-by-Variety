@@ -1,0 +1,9 @@
+Expected raw data files
+
+Place these files in the project root before running the notebook:
+
+- wine.csv
+- winemag-data-130k-v2.csv
+- winemag-data_first150k.csv
+
+These files are not copied into this GitHub export because `wine.csv` is larger than GitHub's 100 MB file limit. The repository includes the derived JSON payload and figure assets needed for portfolio review and future app work.

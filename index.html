@@ -1701,7 +1701,7 @@ function drawFocusHalo(n, x, y) {
   ctx.fill(); ctx.stroke();
   ctx.restore();
 }
-function drawLabelPill(n, x, y, emphasis) {
+function drawLabelPill(n, x, y, emphasis, occupied = []) {
   const text = n.label.replaceAll('_', ' ');
   const font = emphasis === 'hover' ? '500 15px Josefin Sans' : '500 13px Josefin Sans';
   ctx.save();
@@ -1710,19 +1710,32 @@ function drawLabelPill(n, x, y, emphasis) {
   const width = ctx.measureText(text).width;
   const height = emphasis === 'hover' ? 27 : 23;
   const padX = emphasis === 'hover' ? 10 : 8;
-  const desiredLeft = x + 14;
-  const left = Math.max(5, Math.min(desiredLeft, ctx.canvas.clientWidth - width - padX * 2 - 5));
-  const top = Math.max(4, Math.min(y - height / 2, ctx.canvas.clientHeight - height - 4));
+  const outerWidth = width + padX * 2;
+  const canvasWidth = ctx.canvas.clientWidth, canvasHeight = ctx.canvas.clientHeight;
+  const collides = box => occupied.some(other => box.left < other.left + other.width + 4 && box.left + box.width + 4 > other.left && box.top < other.top + other.height + 4 && box.top + box.height + 4 > other.top);
+  const candidates = [];
+  for (const side of [1, -1]) {
+    for (const shift of [0, -height - 5, height + 5, -2 * height - 10, 2 * height + 10, -3 * height - 15, 3 * height + 15]) {
+      candidates.push({ left: side > 0 ? x + 14 : x - outerWidth - 14, top: y - height / 2 + shift });
+    }
+  }
+  let box = null;
+  for (const candidate of candidates) {
+    const normalized = { left: Math.max(5, Math.min(candidate.left, canvasWidth - outerWidth - 5)), top: Math.max(4, Math.min(candidate.top, canvasHeight - height - 4)), width: outerWidth, height };
+    if (!collides(normalized)) { box = normalized; break; }
+  }
+  box = box || { left: Math.max(5, Math.min(x + 14, canvasWidth - outerWidth - 5)), top: Math.max(4, Math.min(y - height / 2, canvasHeight - height - 4)), width: outerWidth, height };
+  occupied.push(box);
   ctx.globalAlpha = 0.96;
   ctx.fillStyle = emphasis === 'hover' ? '#17110f' : '#201c19';
   ctx.strokeStyle = emphasis === 'hover' ? '#ffe09a' : '#72513b';
   ctx.lineWidth = emphasis === 'hover' ? 1.5 : 1;
   ctx.beginPath();
-  ctx.roundRect(left, top, width + padX * 2, height, 5);
+  ctx.roundRect(box.left, box.top, box.width, box.height, 5);
   ctx.fill(); ctx.stroke();
   ctx.globalAlpha = 1;
   ctx.fillStyle = emphasis === 'hover' ? '#fff2cd' : '#f8f0df';
-  ctx.fillText(text, left + padX, top + height / 2 + .5);
+  ctx.fillText(text, box.left + padX, box.top + height / 2 + .5);
   ctx.restore();
 }
 function draw() {
@@ -1735,6 +1748,7 @@ function draw() {
   for (let y = Math.floor(wy(rect.height)/grid)*grid; y < wy(0); y += grid) { ctx.beginPath(); ctx.moveTo(0,sy(y)); ctx.lineTo(rect.width,sy(y)); ctx.stroke(); }
 
   const relationState = selectedRelationState();
+  const labelBoxes = [];
   for (const record of relationState.records) {
     const common = relationState.counts.get(record.target.label) > 1;
     ctx.globalAlpha = relationAlpha(record, relationState.counts);
@@ -1797,14 +1811,14 @@ function draw() {
       if (n.kind === 'word' && state.scale < 155 && !hit) continue;
       if (n.kind === 'word' && n.global_review_pct < 1.8 && state.scale < 230 && !hit) continue;
       const emphasis = state.hover === n ? 'hover' : (isSelected(n) ? 'selected' : (relatedCount > 0 ? 'related' : ''));
-      if (emphasis && emphasis !== 'hover') { drawLabelPill(n, sx(n.x), sy(n.y), emphasis); continue; }
+      if (emphasis && emphasis !== 'hover') { drawLabelPill(n, sx(n.x), sy(n.y), emphasis, labelBoxes); continue; }
       if (emphasis === 'hover') continue;
       ctx.fillStyle = relatedCount > 1 ? '#f8f0df' : (hit ? '#f8f0df' : (n.kind === 'variety' ? '#dc6873' : '#6faec4'));
       ctx.font = '300 12px Josefin Sans';
       ctx.fillText(n.label, sx(n.x) + 8, sy(n.y));
     }
   }
-  if (state.hover && visible(state.hover)) drawLabelPill(state.hover, sx(state.hover.x), sy(state.hover.y), 'hover');
+  if (state.hover && visible(state.hover)) drawLabelPill(state.hover, sx(state.hover.x), sy(state.hover.y), 'hover', labelBoxes);
   ctx.restore();
   panel.innerHTML = panelHtml(state.selected.length ? state.selected : (state.hover ? [state.hover] : []), relationState.counts);
 }

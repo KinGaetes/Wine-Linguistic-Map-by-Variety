@@ -46,7 +46,9 @@ body.lang-es .lang-en { display:none; }
 .toolbar { margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
 @media (max-width: 980px) { .map-shell { grid-template-columns:1fr; } .map-panel { min-height:auto; } }
 </style>
-</head>
+<style>
+@font-face{font-family:'Josefin Sans';src:url('assets/fonts/josefin-sans/JosefinSans-VariableFont_wght.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}@font-face{font-family:'The Seasons Safe';src:url('assets/fonts/the-seasons/Demo_Fonts/Fontspring-DEMO-theseasons-reg.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0030-0039,U+0041-005A,U+0061-007A}@font-face{font-family:'The Seasons Safe';src:url('assets/fonts/the-seasons/Demo_Fonts/Fontspring-DEMO-theseasons-bd.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0030-0039,U+0041-005A,U+0061-007A}@font-face{font-family:'The Seasons Safe';src:url('assets/fonts/the-seasons/Demo_Fonts/Fontspring-DEMO-theseasons-lt.otf') format('opentype');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+00C0-024F}:root{--ink:#f8f0df;--muted:#9e9384;--line:#4d4136;--panel:#201c19;--accent:#982d3d;--accent2:#6faec4;--gold:#e7b64d;--bg:#121110;--surface:#201c19;--surface-2:#2a241f;--text:#f8f0df;--soft:#cbbfab;--wine:#982d3d;--wine-light:#dc6873;--gold-light:#ffe09a;--plum:#a47dc7;--green:#8bc99a;--blue:#6faec4;--shadow:0 18px 45px rgba(0,0,0,.3)}body{color:var(--text);background:radial-gradient(ellipse 72vw 65vh at 80% 0%,rgba(140,40,53,.22),transparent 74%),var(--bg);background-attachment:fixed;font-family:'Josefin Sans',ui-sans-serif,system-ui,sans-serif;font-weight:300}header{border-color:var(--line);background:rgba(18,17,16,.95);backdrop-filter:blur(14px)}h1,h2,h3{color:var(--text);font-family:'The Seasons Safe','Josefin Sans',Georgia,serif;font-synthesis:none;line-height:1.04}h1{margin-bottom:12px;font-size:clamp(2.7rem,5vw,5rem);letter-spacing:-.045em}h2{margin-bottom:13px;color:var(--gold-light);font-size:clamp(2rem,3.3vw,3.15rem);letter-spacing:-.035em}h3{font-size:1.45rem}.subtitle,p{color:var(--soft)}.subtitle{margin:0;font-size:clamp(1rem,1.7vw,1.15rem)}section{border-color:var(--line);padding:54px 0}.graph-grid{gap:18px;margin-top:22px}.figure-card{border-color:var(--line);border-radius:15px;padding:16px;background:var(--surface);box-shadow:var(--shadow)}.figure-card img{border-color:var(--line);border-radius:8px}.figure-card p{color:var(--muted)}.map-shell{gap:18px}.map-stage{border-color:var(--line);border-radius:15px;background:#171513;box-shadow:var(--shadow)}.map-controls{margin-bottom:14px}button,input,label.control{min-height:38px;border-color:var(--line);border-radius:7px;color:var(--text);background:var(--surface-2);font-family:'Josefin Sans',ui-sans-serif,sans-serif;font-weight:400}button{transition:.18s transform,.18s background}button:hover{color:#291a0b;background:var(--gold);border-color:var(--gold);transform:translateY(-1px)}button:focus-visible,input:focus-visible{outline:3px solid var(--gold-light);outline-offset:3px}input::placeholder{color:var(--muted)}.map-panel{border-color:var(--line);border-radius:15px;color:var(--soft);background:var(--surface);box-shadow:var(--shadow)}.panel-card{border-color:var(--line)}.panel-card h3{color:var(--gold-light);font-size:1.25rem}.legend{color:var(--soft)}.legend span::before{background:var(--blue)}.legend .variety::before{background:var(--wine-light)}details{border-color:var(--line);border-radius:10px;background:var(--surface)}summary{color:var(--gold-light);font-family:'Josefin Sans',ui-sans-serif,sans-serif;font-weight:500}pre{color:var(--soft);background:#141210;border-radius:0 0 10px 10px;font-family:'Josefin Sans',ui-monospace,monospace}footer{border-color:var(--line);color:var(--muted)}.toolbar{margin-top:20px}.toolbar button[data-lang-button="es"]{color:#291a0b;background:var(--gold);border-color:var(--gold)}body.lang-en .toolbar button[data-lang-button="es"]{color:var(--soft);background:var(--surface-2);border-color:var(--line)}body.lang-en .toolbar button[data-lang-button="en"]{color:#291a0b;background:var(--gold);border-color:var(--gold)}@media(max-width:560px){header{padding:32px 16px 25px}main{padding:18px 16px 42px}section{padding:40px 0}input[type=search]{min-width:0;width:100%}.map-stage,#mapCanvas{min-height:540px;height:540px}}
+</style></head>
 <body class="lang-es">
 <header>
   <h1><span class="lang-es">Analisis de lenguaje en reviews de vino</span><span class="lang-en">Wine review language analysis</span></h1>
@@ -1622,7 +1624,7 @@ const state = { scale: 1, offsetX: 0, offsetY: 0, dragging: false, lastX: 0, las
 const settings = { words: true, varieties: true, labels: true };
 const nodes = MAP_DATA.nodes;
 const nodeByLabel = new Map(nodes.map((node) => [node.label, node]));
-const selectedColors = ['#d95f02', '#6a3d9a'];
+const selectedColors = ['#dc6873', '#e7b64d', '#a47dc7', '#8bc99a', '#6faec4'];
 const bounds = nodes.reduce((b, n) => { b.minX=Math.min(b.minX,n.x); b.maxX=Math.max(b.maxX,n.x); b.minY=Math.min(b.minY,n.y); b.maxY=Math.max(b.maxY,n.y); return b; }, {minX:Infinity,maxX:-Infinity,minY:Infinity,maxY:-Infinity});
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -1687,7 +1689,7 @@ function draw() {
   const rect = canvas.getBoundingClientRect();
   ctx.clearRect(0,0,rect.width,rect.height);
   ctx.save();
-  ctx.strokeStyle = '#e5e9ed'; ctx.lineWidth = 1;
+  ctx.strokeStyle = '#4d4136'; ctx.lineWidth = 1;
   const grid = state.scale > 120 ? 0.25 : 0.5;
   for (let x = Math.floor(wx(0)/grid)*grid; x < wx(rect.width); x += grid) { ctx.beginPath(); ctx.moveTo(sx(x),0); ctx.lineTo(sx(x),rect.height); ctx.stroke(); }
   for (let y = Math.floor(wy(rect.height)/grid)*grid; y < wy(0); y += grid) { ctx.beginPath(); ctx.moveTo(0,sy(y)); ctx.lineTo(rect.width,sy(y)); ctx.stroke(); }
@@ -1696,7 +1698,7 @@ function draw() {
   for (const record of relationState.records) {
     const common = relationState.counts.get(record.target.label) > 1;
     ctx.globalAlpha = relationAlpha(record, relationState.counts);
-    ctx.strokeStyle = common ? '#111820' : record.color;
+    ctx.strokeStyle = common ? '#121110' : record.color;
     ctx.lineWidth = relationLineWidth(record, relationState.counts) + (common ? 3.2 : 0);
     ctx.beginPath();
     ctx.moveTo(sx(record.source.x), sy(record.source.y));
@@ -1704,7 +1706,7 @@ function draw() {
     ctx.stroke();
     if (common) {
       ctx.globalAlpha = 0.95;
-      ctx.strokeStyle = '#f2c94c';
+      ctx.strokeStyle = '#ffe09a';
       ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(sx(record.source.x), sy(record.source.y));
@@ -1722,8 +1724,8 @@ function draw() {
     const selectedOrRelated = isSelected(n) || relatedCount > 0;
     const hit = matches(n) || selectedOrRelated || state.hover === n;
     ctx.globalAlpha = relationMode && !selectedOrRelated && !matches(n) && state.hover !== n ? 0.12 : (n.kind === 'word' ? (hit ? 0.95 : 0.48) : 0.92);
-    ctx.fillStyle = common ? '#f2c94c' : (n.color || (n.kind === 'word' ? '#1f6f78' : '#8b1e3f'));
-    ctx.strokeStyle = common ? '#111820' : (hit ? '#111820' : '#ffffff');
+    ctx.fillStyle = common ? '#ffe09a' : (n.kind === 'word' ? '#6faec4' : ({red:'#dc6873',white:'#e7b64d',rose:'#a47dc7',sparkling:'#8bc99a',dessert:'#6faec4'}[n.color_group] || '#9e9384'));
+    ctx.strokeStyle = common ? '#121110' : (hit ? '#121110' : '#cbbfab');
     ctx.lineWidth = common ? 3.2 : (hit ? 2.4 : 1);
     ctx.beginPath();
     if (n.kind === 'variety') { const r = (isSelected(n) || common) ? 10 : (hit ? 8 : nodeRadius(n)); ctx.rect(x-r, y-r, r*2, r*2); }
@@ -1731,7 +1733,7 @@ function draw() {
     ctx.fill(); ctx.stroke();
   }
   if (settings.labels) {
-    ctx.globalAlpha = 1; ctx.font = '12px Arial'; ctx.textBaseline = 'middle';
+    ctx.globalAlpha = 1; ctx.font = '300 12px Josefin Sans'; ctx.textBaseline = 'middle';
     for (const n of nodes) {
       if (!visible(n)) continue;
       const relatedCount = relationState.counts.get(n.label) || 0;
@@ -1741,8 +1743,8 @@ function draw() {
       if (relationMode && !hit) continue;
       if (n.kind === 'word' && state.scale < 155 && !hit) continue;
       if (n.kind === 'word' && n.global_review_pct < 1.8 && state.scale < 230 && !hit) continue;
-      ctx.fillStyle = relatedCount > 1 ? '#000' : (hit ? '#000' : (n.kind === 'variety' ? '#172026' : '#35545a'));
-      ctx.font = (isSelected(n) || relatedCount > 1) ? 'bold 12px Arial' : '12px Arial';
+      ctx.fillStyle = relatedCount > 1 ? '#f8f0df' : (hit ? '#f8f0df' : (n.kind === 'variety' ? '#dc6873' : '#6faec4'));
+      ctx.font = (isSelected(n) || relatedCount > 1) ? '500 12px Josefin Sans' : '300 12px Josefin Sans';
       ctx.fillText(n.label, sx(n.x) + 8, sy(n.y));
     }
   }
@@ -1757,13 +1759,13 @@ function panelHtml(items, relationCounts) {
     if (n.kind === 'variety') {
       const terms = (n.top_terms || []).map(t => {
         const common = relationCounts && relationCounts.get(t.term) > 1;
-        return `<li${common ? ' style="font-weight:700;color:#8b6508"' : ''}>${t.term}: ${t.review_pct.toFixed(1)}%</li>`;
+        return `<li${common ? ' style="font-weight:500;color:#ffe09a"' : ''}>${t.term}: ${t.review_pct.toFixed(1)}%</li>`;
       }).join('');
       return `<div class="panel-card"><h3>${swatch}${n.label}</h3><p><strong>Tipo:</strong> ${n.color_group}</p><p><strong>Reviews:</strong> ${n.review_count.toLocaleString('es-CL')}</p><p><strong>Lazos visibles:</strong> terminos clave del perfil de sabor.</p><ul>${terms}</ul></div>`;
     }
     const varieties = (n.nearest_varieties || []).map(v => {
       const common = relationCounts && relationCounts.get(v.variety) > 1;
-      return `<li${common ? ' style="font-weight:700;color:#8b6508"' : ''}>${v.variety}: ${v.review_pct.toFixed(1)}%</li>`;
+      return `<li${common ? ' style="font-weight:500;color:#ffe09a"' : ''}>${v.variety}: ${v.review_pct.toFixed(1)}%</li>`;
     }).join('');
     return `<div class="panel-card"><h3>${swatch}${n.label}</h3><p><strong>Presencia global:</strong> ${n.global_review_pct.toFixed(2)}%</p><p><strong>Lazos visibles:</strong> cepas mas cercanas a esta palabra.</p><ul>${varieties}</ul></div>`;
   }).join('');

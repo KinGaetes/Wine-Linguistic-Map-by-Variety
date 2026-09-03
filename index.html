@@ -1683,10 +1683,47 @@ function toggleSelection(node) {
   if (state.selected.length > 2) state.selected.shift();
 }
 function relationLineWidth(record, counts) {
-  return counts.get(record.target.label) > 1 ? 4.4 : 2.1;
+  return counts.get(record.target.label) > 1 ? 4.2 : 1.45;
 }
 function relationAlpha(record, counts) {
-  return counts.get(record.target.label) > 1 ? 0.95 : 0.62;
+  return counts.get(record.target.label) > 1 ? 0.95 : 0.38;
+}
+function drawFocusHalo(n, x, y) {
+  const radius = n.kind === 'variety' ? 13 : 11;
+  ctx.save();
+  ctx.globalAlpha = 0.95;
+  ctx.fillStyle = '#121110';
+  ctx.strokeStyle = '#ffe09a';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  if (n.kind === 'variety') ctx.rect(x-radius, y-radius, radius*2, radius*2);
+  else ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+}
+function drawLabelPill(n, x, y, emphasis) {
+  const text = n.label.replaceAll('_', ' ');
+  const font = emphasis === 'hover' ? '500 15px Josefin Sans' : '500 13px Josefin Sans';
+  ctx.save();
+  ctx.font = font;
+  ctx.textBaseline = 'middle';
+  const width = ctx.measureText(text).width;
+  const height = emphasis === 'hover' ? 27 : 23;
+  const padX = emphasis === 'hover' ? 10 : 8;
+  const desiredLeft = x + 14;
+  const left = Math.max(5, Math.min(desiredLeft, ctx.canvas.clientWidth - width - padX * 2 - 5));
+  const top = Math.max(4, Math.min(y - height / 2, ctx.canvas.clientHeight - height - 4));
+  ctx.globalAlpha = 0.96;
+  ctx.fillStyle = emphasis === 'hover' ? '#17110f' : '#201c19';
+  ctx.strokeStyle = emphasis === 'hover' ? '#ffe09a' : '#72513b';
+  ctx.lineWidth = emphasis === 'hover' ? 1.5 : 1;
+  ctx.beginPath();
+  ctx.roundRect(left, top, width + padX * 2, height, 5);
+  ctx.fill(); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = emphasis === 'hover' ? '#fff2cd' : '#f8f0df';
+  ctx.fillText(text, left + padX, top + height / 2 + .5);
+  ctx.restore();
 }
 function draw() {
   const rect = canvas.getBoundingClientRect();
@@ -1730,10 +1767,23 @@ function draw() {
     ctx.fillStyle = common ? '#ffe09a' : (n.kind === 'word' ? '#6faec4' : ({red:'#dc6873',white:'#e7b64d',rose:'#a47dc7',sparkling:'#8bc99a',dessert:'#6faec4'}[n.color_group] || '#9e9384'));
     ctx.strokeStyle = common ? '#121110' : (hit ? '#121110' : '#cbbfab');
     ctx.lineWidth = common ? 3.2 : (hit ? 2.4 : 1);
+    if (state.hover === n) drawFocusHalo(n, x, y);
     ctx.beginPath();
     if (n.kind === 'variety') { const r = (isSelected(n) || common) ? 10 : (hit ? 8 : nodeRadius(n)); ctx.rect(x-r, y-r, r*2, r*2); }
     else { ctx.arc(x, y, (isSelected(n) || common) ? 8.5 : (hit ? 7 : nodeRadius(n)), 0, Math.PI * 2); }
     ctx.fill(); ctx.stroke();
+  }
+  if (state.hover && visible(state.hover)) {
+    const n = state.hover, x = sx(n.x), y = sy(n.y);
+    drawFocusHalo(n, x, y);
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = n.kind === 'word' ? '#6faec4' : ({red:'#dc6873',white:'#e7b64d',rose:'#a47dc7',sparkling:'#8bc99a',dessert:'#6faec4'}[n.color_group] || '#9e9384');
+    ctx.strokeStyle = '#fff2cd'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    if (n.kind === 'variety') { const r = 8.5; ctx.rect(x-r, y-r, r*2, r*2); }
+    else ctx.arc(x, y, 7.5, 0, Math.PI * 2);
+    ctx.fill(); ctx.stroke(); ctx.restore();
   }
   if (settings.labels) {
     ctx.globalAlpha = 1; ctx.font = '300 12px Josefin Sans'; ctx.textBaseline = 'middle';
@@ -1746,11 +1796,15 @@ function draw() {
       if (relationMode && !hit) continue;
       if (n.kind === 'word' && state.scale < 155 && !hit) continue;
       if (n.kind === 'word' && n.global_review_pct < 1.8 && state.scale < 230 && !hit) continue;
+      const emphasis = state.hover === n ? 'hover' : (isSelected(n) ? 'selected' : (relatedCount > 0 ? 'related' : ''));
+      if (emphasis && emphasis !== 'hover') { drawLabelPill(n, sx(n.x), sy(n.y), emphasis); continue; }
+      if (emphasis === 'hover') continue;
       ctx.fillStyle = relatedCount > 1 ? '#f8f0df' : (hit ? '#f8f0df' : (n.kind === 'variety' ? '#dc6873' : '#6faec4'));
-      ctx.font = (isSelected(n) || relatedCount > 1) ? '500 12px Josefin Sans' : '300 12px Josefin Sans';
+      ctx.font = '300 12px Josefin Sans';
       ctx.fillText(n.label, sx(n.x) + 8, sy(n.y));
     }
   }
+  if (state.hover && visible(state.hover)) drawLabelPill(state.hover, sx(state.hover.x), sy(state.hover.y), 'hover');
   ctx.restore();
   panel.innerHTML = panelHtml(state.selected.length ? state.selected : (state.hover ? [state.hover] : []), relationState.counts);
 }

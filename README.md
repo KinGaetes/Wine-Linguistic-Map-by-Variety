@@ -22,6 +22,7 @@ En el mapa, los elementos próximos tienen perfiles de lenguaje más parecidos d
 
 - Selecciona una cepa para compararla con el perfil global ponderado.
 - Selecciona una segunda cepa para contrastarlas directamente; puedes hacerlo desde el mapa, los campos de búsqueda o los presets iniciales.
+- Selecciona una o dos palabras clave para invertir la comparación: el radar mostrará las cepas donde cada palabra tiene mayor presencia relativa.
 - El radar selecciona automáticamente hasta ocho ejes informativos. Con dos cepas, prioriza tres notas distintivas de cada una y dos compartidas, omitiendo las que aparecen en menos del 2 % de las reseñas de ambos perfiles.
 - El modo **Personalizar** reemplaza esos ejes por chips editables y un buscador de descriptores, sin requerir selección múltiple.
 - Las barras y etiquetas inferiores resumen diferencias y asociaciones compartidas.

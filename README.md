@@ -21,8 +21,9 @@ La aplicación muestra **98 cepas**, **89 descriptores curados** y **633.687 res
 En el mapa, los elementos próximos tienen perfiles de lenguaje más parecidos dentro del modelo. La posición no representa geografía, calidad, precio ni una escala de “mejor” o “peor”.
 
 - Selecciona una cepa para compararla con el perfil global ponderado.
-- Selecciona una segunda cepa para contrastarlas directamente.
-- El radar muestra el porcentaje de reseñas de cada perfil que menciona los descriptores elegidos.
+- Selecciona una segunda cepa para contrastarlas directamente; puedes hacerlo desde el mapa, los campos de búsqueda o los presets iniciales.
+- El radar selecciona automáticamente hasta ocho ejes informativos. Con dos cepas, prioriza tres notas distintivas de cada una y dos compartidas, omitiendo las que aparecen en menos del 2 % de las reseñas de ambos perfiles.
+- El modo **Personalizar** reemplaza esos ejes por chips editables y un buscador de descriptores, sin requerir selección múltiple.
 - Las barras y etiquetas inferiores resumen diferencias y asociaciones compartidas.
 - Selecciona una palabra para consultar las cepas donde su presencia relativa es mayor.
 
